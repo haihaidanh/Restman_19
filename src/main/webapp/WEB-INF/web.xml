@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+
+    <welcome-file-list>
+        <welcome-file>view/LoginView.jsp</welcome-file>
+    </welcome-file-list>
+
+    <servlet>
+        <servlet-name>EditFormView</servlet-name>
+        <jsp-file>/view/manager/EditFormView.jsp</jsp-file>
+        <multipart-config>
+            <max-file-size>5242880</max-file-size>
+            <max-request-size>31457280</max-request-size>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EditFormView</servlet-name>
+        <url-pattern>/view/manager/EditFormView.jsp</url-pattern>
+    </servlet-mapping>
+</web-app>
