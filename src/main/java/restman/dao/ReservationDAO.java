@@ -20,33 +20,25 @@ public class ReservationDAO extends DAO {
             JOIN user u ON c.id = u.id
             """;
 
-    public ReservationDAO() { super(); }
-
-    public List<Reservation> getAllReservations() {
-        String sql = BASE_SQL + """
-                WHERE r.status IN ('PENDING','CONFIRMED')
-                ORDER BY r.reservation_time DESC
-                """;
-        List<Reservation> list = new ArrayList<>();
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) list.add(mapReservation(rs));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        loadDetails(list);
-        return list;
+    public ReservationDAO() {
+        super();
     }
 
-    public List<Reservation> getReservations(String customerPhone) {
+
+    public List<Reservation> getReservations(String number) {
+        boolean hasFilter = number != null && !number.trim().isEmpty();
+
         String sql = BASE_SQL + """
-                WHERE u.phone_number LIKE ?
-                  AND r.status IN ('PENDING','CONFIRMED')
-                ORDER BY r.reservation_time DESC
-                """;
+                WHERE r.status IN ('PENDING','CONFIRMED')
+                """
+                + (hasFilter ? " AND u.phone_number LIKE ? " : "")
+                + " ORDER BY r.reservation_time DESC";
+
         List<Reservation> list = new ArrayList<>();
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, "%" + (customerPhone == null ? "" : customerPhone.trim()) + "%");
+            if (hasFilter) {
+                ps.setString(1, "%" + number.trim() + "%");
+            }
             ResultSet rs = ps.executeQuery();
             while (rs.next()) list.add(mapReservation(rs));
         } catch (SQLException e) {
@@ -62,8 +54,10 @@ public class ReservationDAO extends DAO {
         res.setNumberOfGuests(rs.getInt("number_of_guests"));
         res.setReservationTime(rs.getTimestamp("reservation_time"));
         res.setCreateAt(rs.getTimestamp("create_at"));
-        try { res.setStatus(Reservation.Status.valueOf(rs.getString("status"))); }
-        catch (Exception ignored) {}
+        try {
+            res.setStatus(Reservation.Status.valueOf(rs.getString("status")));
+        } catch (Exception ignored) {
+        }
         res.setNote(rs.getString("note"));
 
         Customer cust = new Customer();

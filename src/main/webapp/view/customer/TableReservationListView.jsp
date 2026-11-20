@@ -9,13 +9,7 @@
 
     String timBan = request.getParameter("timBan");
     ReservationDAO dao = new ReservationDAO();
-    List<Reservation> banDat = null;
-
-    if (timBan != null && !timBan.trim().isEmpty()) {
-        banDat = dao.getReservations(timBan.trim());
-    } else {
-        banDat = dao.getAllReservations();
-    }
+    List<Reservation> banDat = dao.getReservations(timBan);
 %>
 <html>
 <head>

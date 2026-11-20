@@ -397,7 +397,6 @@
 <script>
     var slider = document.getElementById('slider');
     var thumbs = document.querySelectorAll('#thumbs img');
-    var counter = document.getElementById('counter');
     var total = <%= urls.size() %>;
 
     function current() {
@@ -423,7 +422,6 @@
             thumbs[k].classList.toggle('active', k === i);
         }
 
-        counter.textContent = (i + 1) + ' / ' + total;
     }
 
     if (slider) {
